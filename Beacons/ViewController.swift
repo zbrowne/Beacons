@@ -14,8 +14,6 @@ class ViewController: UIViewController {
     
     let locationManager = CLLocationManager()
     let uuid = UUID(uuidString: "11231989-1989-1989-1989-112319891989")
-    let major: CLBeaconMajorValue = 0
-    let minor: CLBeaconMinorValue = 3
     var beaconRegion: CLBeaconRegion!
 
     override func viewDidLoad() {

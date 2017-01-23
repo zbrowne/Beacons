@@ -7,12 +7,31 @@
 //
 
 import UIKit
+import CoreLocation
+import CoreBluetooth
 
 class ViewController: UIViewController {
+    
+    let locationManager = CLLocationManager()
+    let uuid = UUID(uuidString: "11231989-1989-1989-1989-112319891989")
+    let major: CLBeaconMajorValue = 0
+    let minor: CLBeaconMinorValue = 3
+    var beaconRegion: CLBeaconRegion!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        if let uuid = uuid {
+            beaconRegion = CLBeaconRegion(proximityUUID: uuid, identifier: "Gimbal")
+        }
+        
+        locationManager.requestAlwaysAuthorization()
+        locationManager.delegate = self
+        locationManager.startMonitoring(for: beaconRegion)
+        locationManager.startRangingBeacons(in: beaconRegion)
+        locationManager.startUpdatingLocation()
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -21,5 +40,24 @@ class ViewController: UIViewController {
     }
 
 
+}
+
+// MARK: - CLLocationManagerDelegate
+
+extension ViewController: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
+        NSLog("Failed monitoring region: \(error.localizedDescription)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        NSLog("Location manager failed: \(error.localizedDescription)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
+        print(beacons)
+    }
+    
+    
 }
 
